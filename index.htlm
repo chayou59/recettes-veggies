@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeggiHeal - Recettes Végétariennes Anti-Inflammatoires</title>
+  <style>
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #4caf50;
+      --secondary: #ff8f00;
+      --accent: #e8f5e8;
+      --text-dark: #2e2e2e;
+      --text-light: #666;
+      --card-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f1f8e9 0%, #c8e6c9 100%);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .search-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 250px;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 50px;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .filter-btn {
+      padding: 0.7rem 1.5rem;
+      border: 2px solid var(--primary);
+      background: white;
+      color: var(--primary);
+      border-radius: 25px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .recipes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .recipe-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .recipe-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .recipe-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(45deg, var(--primary-light), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: white;
+      position: relative;
+    }
+
+    .recipe-content {
+      padding: 1.5rem;
+    }
+
+    .recipe-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .recipe-description {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .recipe-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      background: var(--accent);
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .anti-inflammatory-tag {
+      background: linear-gradient(135deg, #ff4081, #e91e63);
+      color: white;
+    }
+
+    .recipe-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .recipe-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .difficulty {
+      background: var(--secondary);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlide 0.3s ease;
+    }
+
+    @keyframes modalSlide {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .close-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .ingredients-section,
+    .instructions-section,
+    .benefits-section {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .ingredients-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .ingredients-list li {
+      background: var(--accent);
+      padding: 0.8rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .instructions-list {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+
+    .instructions-list li {
+      counter-increment: step-counter;
+      background: #f8f9fa;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary);
+      position: relative;
+    }
+
+    .instructions-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: -2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--primary);
+      color: white;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .benefit-item {
+      background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .benefit-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .floating-add {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--secondary), #f57c00);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+      z-index: 100;
+    }
+
+    .floating-add:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 40px rgba(255, 143, 0, 0.4);
+    }
+
+    .stats-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .stat-item {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 1.5rem 1rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .search-bar {
+        flex-direction: column;
+      }
+
+      .recipes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+      }
+
+      .floating-add {
+        bottom: 1rem;
+        right: 1rem;
+      }
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-light);
+    }
+
+    .no-results-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🌱 VeggiHeal</h1>
+    <p>Découvrez des recettes végétariennes délicieuses aux propriétés anti-inflammatoires pour votre bien-être naturel</p>
+  </div>
+
+  <div class="container">
+    <div class="stats-section">
+      <h2>🏥 Pourquoi l'alimentation anti-inflammatoire ?</h2>
+      <p>L'inflammation chronique est liée à de nombreuses maladies. Une alimentation riche en antioxydants, oméga-3 et nutriments peut considérablement réduire l'inflammation.</p>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number" id="recipe-count">50+</span>
+          <span class="stat-label">Recettes anti-inflammatoires</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Végétarien</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">0</span>
+          <span class="stat-label">Ingrédients pro-inflammatoires</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Accès gratuit</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-section">
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="🔍 Rechercher une recette, un ingrédient..." id="search-input">
+      </div>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-category="all">🌟 Toutes</button>
+        <button class="filter-btn" data-category="breakfast">🌅 Petit-déjeuner</button>
+        <button class="filter-btn" data-category="lunch">☀️ Déjeuner</button>
+        <button class="filter-btn" data-category="dinner">🌙 Dîner</button>
+        <button class="filter-btn" data-category="snack">🥜 Collation</button>
+        <button class="filter-btn" data-category="drink">🥤 Boisson</button>
+      </div>
+    </div>
+
+    <div class="recipes-grid" id="recipes-container">
+      <!-- Recettes générées par JavaScript -->
+    </div>
+
+    <div class="no-results" id="no-results" style="display: none;">
+      <span class="no-results-icon">🔍</span>
+      <h3>Aucune recette trouvée</h3>
+      <p>Essayez de modifier vos critères de recherche</p>
+    </div>
+  </div>
+
+  <!-- Modal de recette -->
+  <div class="modal" id="recipe-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <h2 id="modal-title"></h2>
+        <p id="modal-description"></p>
+      </div>
+      <div class="modal-body">
+        <div class="ingredients-section">
+          <h3 class="section-title">🛒 Ingrédients</h3>
+          <ul class="ingredients-list" id="modal-ingredients"></ul>
+        </div>
+        
+        <div class="instructions-section">
+          <h3 class="section-title">👩‍🍳 Préparation</h3>
+          <ol class="instructions-list" id="modal-instructions"></ol>
+        </div>
+        
+        <div class="benefits-section">
+          <h3 class="section-title">💚 Bienfaits anti-inflammatoires</h3>
+          <div class="benefits-grid" id="modal-benefits"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="floating-add" onclick="showAddRecipeForm()" title="Ajouter une recette">+</button>
+
+  <script>
+    // Base de données des recettes
+    const recipes = [
+      {
+        id: 1,
+        title: "Smoothie Bowl Curcuma-Mangue",
+        description: "Un petit-déjeuner coloré et anti-inflammatoire avec curcuma, mangue et graines de chia",
+        category: "breakfast",
+        time: "10 min",
+        difficulty: "Facile",
+        emoji: "🥭",
+        tags: ["Sans gluten", "Vegan", "Riche en antioxydants"],
+        ingredients: [
+          "1 mangue mûre",
+          "1 banane",
+          "200ml lait de coco",
+          "1 c.à.c de curcuma en poudre",
+          "1 c.à.s de graines de chia",
+          "1 c.à.s de miel (optionnel)",
+          "Myrtilles fraîches",
+          "Noix de coco râpée"
+        ],
+        instructions: [
+          "Mixer la mangue, la banane, le lait de coco et le curcuma jusqu'à obtenir une consistance lisse",
+          "Verser dans un bol",
+          "Décorer avec les myrtilles, graines de chia et noix de coco",
+          "Servir immédiatement"
+        ],
+        benefits: [
+          { icon: "🧬", title: "Curcuma", desc: "Puissant anti-inflammatoire naturel" },
+          { icon: "🫐", title: "Myrtilles", desc: "Riches en anthocyanes antioxydantes" },
+          { icon: "🥥", title: "Coco", desc: "Acides gras anti-inflammatoires" }
+        ]
+      },
+      {
+        id: 2,
+        title: "Salade de Quinoa aux Épinards",
+        description: "Salade nutritive avec quinoa, épinards frais, avocat et vinaigrette au citron",
+        category: "lunch",
+        time: "20 min",
+        difficulty: "Facile",
+        emoji: "🥗",
+        tags: ["Protéines complètes", "Fer", "Folates"],
+        ingredients: [
+          "150g de quinoa",
+          "200g d'épinards frais",
+          "1 avocat",
+          "100g de tomates cerises",
+          "50g de graines de tournesol",
+          "Jus de 1 citron",
+          "3 c.à.s d'huile d'olive",
+          "Sel et poivre"
+        ],
+        instructions: [
+          "Cuire le quinoa selon les instructions du paquet",
+          "Laver et égoutter les épinards",
+          "Couper l'avocat et les tomates cerises",
+          "Mélanger tous les ingrédients",
+          "Préparer la vinaigrette avec citron, huile d'olive, sel et poivre",
+          "Assaisonner et servir"
+        ],
+        benefits: [
+          { icon: "🌿", title: "Épinards", desc: "Riches en nitrates anti-inflammatoires" },
+          { icon: "🥑", title: "Avocat", desc: "Oméga-9 et vitamine E" },
+          { icon: "🌾", title: "Quinoa", desc: "Protéines complètes et magnésium" }
+        ]
+      },
+      {
+        id: 3,
+        title: "Curry de Lentilles au Lait de Coco",
+        description: "Curry épicé et réconfortant avec lentilles rouges, légumes et épices anti-inflammatoires",
+        category: "dinner",
+        time: "35 min",
+        difficulty: "Moyen",
+        emoji: "🍛",
+        tags: ["Épices", "Protéines végétales", "Réconfortant"],
+        ingredients: [
+          "200g de lentilles rouges",
+          "400ml de lait de coco",
+          "1 oignon",
+          "2 gousses d'ail",
+          "1 morceau de gingembre frais",
+          "1 c.à.s de curcuma",
+          "1 c.à.c de cumin",
+          "200g d'épinards",
+          "Coriandre fraîche"
+        ],
+        instructions: [
+          "Faire revenir l'oignon, l'ail et le gingembre",
+          "Ajouter les épices et faire revenir 1 minute",
+          "Ajouter les lentilles et le lait de coco",
+          "Laisser mijoter 20 minutes",
+          "Ajouter les épinards en fin de cuisson",
+          "Garnir de coriandre fraîche"
+        ],
+        benefits: [
+          { icon: "🧄", title: "Gingembre", desc: "Anti-inflammatoire et digestif" },
+          { icon: "🌿", title: "Curcuma", desc: "Curcumine anti-inflammatoire" },
+          { icon: "🫘", title: "Lentilles", desc: "Fibres et protéines végétales" }
+        ]
+      },
+      {
+        id: 4,
+        title: "Thé Vert Matcha Latte",
+        description: "Boisson crémeuse au matcha, riche en antioxydants et légèrement sucrée",
+        category: "drink",
+        time: "5 min",
+        difficulty: "Facile",
+        emoji: "🍵",
+        tags: ["Antioxydants", "Énergisant", "Détox"],
+        ingredients: [
+          "1 c.à.c de poudre de matcha",
+          "250ml de lait d'amande",
+          "1 c.à.s de sirop d'érable",
+          "1/2 c.à.c d'extrait de vanille",
+          "Cannelle en poudre"
+        ],
+        instructions: [
+          "Tamiser la poudre de matcha",
+          "Chauffer le lait d'amande",
+          "Fouetter le matcha avec un peu de lait chaud",
+          "Ajouter le reste du lait, le sirop d'érable et la vanille",
+          "Saupoudrer de cannelle et servir"
+        ],
+        benefits: [
+          { icon: "🍃", title: "Matcha", desc: "EGCG et antioxydants puissants" },
+          { icon: "🥛", title: "Lait d'amande", desc: "Vitamine E anti-inflammatoire" },
+          { icon: "🍁", title: "Sirop d'érable", desc: "Antioxydants naturels" }
+        ]
+      },
+      {
+        id: 5,
+        title: "Energy Balls Cacao-Amandes",
+        description: "Collation énergétique sans cuisson avec cacao cru, amandes et dattes",
+        category: "snack",
+        time: "15 min",
+        difficulty: "Facile",
+        emoji: "🍫",
+        tags: ["Sans cuisson", "Énergétique", "Antioxydants"],
+        ingredients: [
+          "200g de dattes Medjool",
+          "100g d'amandes",
+          "2 c.à.s de cacao cru",
+          "1 c.à.s d'huile de coco",
+          "1 c.à.c d'extrait de vanille",
+          "Noix de coco râpée",
+          "Graines de sésame"
+        ],
+        instructions: [
+          "Dénoyauter les dattes",
+          "Mixer les amandes jusqu'à obtenir une poudre",
+          "Ajouter les dattes et mixer",
+          "Incorporer le cacao, l'huile de coco et la vanille",
+          "Former des boules avec les mains",
+          "Rouler dans la noix de coco ou les graines de sésame",
+          "Réfrigérer 30 minutes avant de servir"
+        ],
+        benefits: [
+          { icon: "🍫", title: "Cacao cru", desc: "Flavonoïdes anti-inflammatoires" },
+          { icon: "🌰", title: "Amandes", desc: "Vitamine E et magnésium" },
+          { icon: "🏺", title: "Dattes", desc: "Fibres et minéraux" }
+        ]
+      },
+      {
+        id: 6,
+        title: "Soupe Miso aux Légumes",
+        description: "Soupe japonaise traditionnelle avec miso, tofu et légumes de saison",
+        category: "dinner",
+        time: "25 min",
+        difficulty: "Moyen",
+        emoji: "🍜",
+        tags: ["Probiotiques", "Faible en calories", "Réconfortant"],
+        ingredients: [
+          "3 c.à.s de pâte miso",
+          "1L de bouillon de légumes",
+          "200g de tofu soyeux",
+          "100g de champignons shiitake",
+          "2 oignons verts",
+          "1 c.à.s d'huile de sésame",
+          "Algues wakame",
+          "Graines de sésame"
+        ],
+        instructions: [
+          "Faire tremper les algues dans l'eau tiède",
+          "Chauffer le bouillon de légumes",
+          "Diluer le miso dans un peu de bouillon chaud",
+          "Ajouter le tofu coupé en dés",
+          "Ajouter les champignons émincés",
+          "Incorporer les algues égouttées",
+          "Garnir d'oignons verts et de graines de sésame"
+        ],
+        benefits: [
+          { icon: "🦠", title: "Miso", desc: "Probiotiques pour l'intestin" },
+          { icon: "🍄", title: "Shiitake", desc: "Beta-glucanes immunostimulants" },
+          { icon: "🌊", title: "Algues", desc: "Iode et minéraux marins" }
+        ]
+      }
+    ];
+
+    let filteredRecipes = [...recipes];
+    let currentCategory = 'all';
+
+    // Initialisation de l'application
+    document.addEventListener('DOMContentLoaded', function() {
+      displayRecipes(recipes);
+      setupEventListeners();
+      updateRecipeCount();
+    });
+
+    function setupEventListeners() {
+      // Recherche
+      document.getElementById('search-input').addEventListener('input', handleSearch);
+      
+      // Filtres
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', handleFilter);
+      });
+
+      // Fermeture du modal
+      document.getElementById('recipe-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
+    }
+
+    function displayRecipes(recipesToShow) {
+      const container = document.getElementById('recipes-container');
+      const noResults = document.getElementById('no-results');
+      
+      if (recipesToShow.length === 0) {
+        container.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
+      }
+
+      noResults.style.display = 'none';
+      
+      container.innerHTML = recipesToShow.map(recipe => `
+        <div class="recipe-card" onclick="openRecipeModal(${recipe.id})">
+          <div class="recipe-image">
+            ${recipe.emoji}
+          </div>
+          <div class="recipe-content">
+            <h3 class="recipe-title">${recipe.title}</h3>
+            <p class="recipe-description">${recipe.description}</p>
+            <div class="recipe-tags">
+              <span class="tag anti-inflammatory-tag">🔥 Anti-inflammatoire</span>
+              ${recipe.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+            <div class="recipe-info">
+              <div class="recipe-time">
+                <span>⏱️</span>
+                <span>${recipe.time}</span>
+              </div>
+              <div class="difficulty">${recipe.difficulty}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleSearch(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      filteredRecipes = recipes.filter(recipe => {
+        const matchesSearch = recipe.title.toLowerCase().includes(searchTerm) ||
+                            recipe.description.toLowerCase().includes(searchTerm) ||
+                            recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm)) ||
+                            recipe.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+        
+        const matchesCategory = currentCategory === 'all' || recipe.category === currentCategory;
+        
+        return matchesSearch && matchesCategory;
+      });
+      
+      displayRecipes(filteredRecipes);
+    }
+
+    function handleFilter(e) {
+      // Retirer
