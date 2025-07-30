@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>VeggiPlan - 30 Jours de Recettes Anti-Inflammatoires</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f1f8e9 0%, #c8e6c9 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .navigation {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-section {
+            margin-bottom: 20px;
+        }
+
+        .nav-title {
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .day-nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .day-btn {
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid #2e7d32;
+            color: #2e7d32;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .day-btn:hover, .day-btn.active {
+            background: #2e7d32;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+        }
+
+        .week-nav {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .week-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #ff8f00, #f57c00);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .week-btn:hover, .week-btn.active {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 143, 0, 0.4);
+        }
+
+        .day-info {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .day-info h2 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4caf50, #2e7d32);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .meals-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .meal-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 5px solid #4caf50;
+            position: relative;
+        }
+
+        .meal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .meal-card.completed {
+            border-top-color: #2e7d32;
+            background: #f8fff8;
+        }
+
+        .anti-inflammatory {
+            position: absolute;
+            top: -8px;
+            right: 15px;
+            background: linear-gradient(135deg, #ff4081, #e91e63);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.75em;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(255, 64, 129, 0.4);
+        }
+
+        .meal-type {
+            background: #2e7d32;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .meal-title {
+            font-size: 1.3em;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .ingredients-section, .instructions-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .ingredients-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ingredients-list li {
+            background: #f1f8e9;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+            font-size: 0.9em;
+        }
+
+        .instructions {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2e7d32;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .action-btn:disabled {
+            background: linear-gradient(135deg, #81c784, #66bb6a);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .meal-benefits {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+            margin-top: 15px;
+        }
+
+        .meal-benefits h4 {
+            color: #1976d2;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .meal-benefits p {
+            font-size: 0.85em;
+            color: #555;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #ff8f00;
+            color: #ff8f00;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #ff8f00;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .day-nav, .week-nav {
+                justify-content: center;
+            }
+            
+            .meals-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-meals {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 VeggiPlan</h1>
+            <p>Programme complet de 30 jours de recettes végétariennes anti-inflammatoires</p>
+        </div>
+
+        <div class="stats">
+            <h3>📊 Votre programme personnalisé de 30 jours</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">120</span>
+                    <span class="stat-label">Recettes complètes</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">30</span>
+                    <span class="stat-label">Jours planifiés</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Végétarien</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="completed-count">0</span>
+                    <span class="stat-label">Repas réalisés</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-section">
+                <div class="nav-title">🗓️ Navigation par semaines</div>
+                <div class="week-nav">
+                    <button class="week-btn active" onclick="showWeek(1)">Semaine 1 (J1-7)</button>
+                    <button class="week-btn" onclick="showWeek(2)">Semaine 2 (J8-14)</button>
+                    <button class="week-btn" onclick="showWeek(3)">Semaine 3 (J15-21)</button>
+                    <button class="week-btn" onclick="showWeek(4)">Semaine 4 (J22-28)</button>
+                    <button class="week-btn" onclick="showWeek(5)">Derniers jours (J29-30)</button>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">📅 Sélection du jour</div>
+                <div class="day-nav" id="day-nav">
+                    <!-- Généré par JavaScript -->
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">🍽️ Filtres par repas</div>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">Tous</button>
+                    <button class="filter-btn" data-filter="Petit-déjeuner">🌅 Petit-déj</button>
+                    <button class="filter-btn" data-filter="Déjeuner">☀️ Déjeuner</button>
+                    <button class="filter-btn" data-filter="Dîner">🌙 Dîner</button>
+                    <button class="filter-btn" data-filter="Collation">🥜 Collation</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="day-info">
+            <h2 id="day-title">Semaine 1 - Jours 1 à 7</h2>
+            <p id="day-description">Commencez votre transformation avec des recettes délicieuses et anti-inflammatoires</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="meals-container" id="meals-container">
+            <div class="loading">📅 Chargement des recettes...</div>
+        </div>
+    </div>
+
+    <script>
+        // Données des recettes complètes (extrait de votre JSON)
+        const recettesData = [
+            {
+                "repas": "Petit-déjeuner",
+                "titre": "Porridge fruits rouges & graines",
+                "ingredients": [
+                    "40g flocons d'avoine",
+                    "200ml lait végétal (amande ou avoine)",
+                    "1 poignée de fruits rouges surgelés",
+                    "1 c.à.c de graines de lin moulues",
+                    "1 pincée de cannelle"
+                ],
+                "instructions": "Faire chauffer le lait et les flocons 5 minutes à feu doux. Ajouter fruits rouges et cannelle. Parsemer de graines de lin au moment de servir.",
+                "jour": 1
+            },
+            {
+                "repas": "Déjeuner",
+                "titre": "Salade de quinoa & pois chiches",
+                "ingredients": [
+                    "100g de quinoa",
+                    "100g de pois chiches cuits",
+                    "1/2 poivron rouge",
+                    "1/2 concombre",
+                    "Jus de 1/2 citron",
+                    "1 c.à.s d'huile d'olive",
+                    "Persil frais"
+                ],
+                "instructions": "Cuire le quinoa. Mélanger avec les pois chiches, légumes en dés, persil. Assaisonner citron-huile-épices.",
+                "jour": 1
+            },
+            {
+                "repas": "Collation",
+                "titre": "Kiwi & noix",
+                "ingredients": [
+                    "1 kiwi",
+                    "1 poignée de noix (30g)"
+                ],
+                "instructions": "Éplucher le kiwi. Servir avec les noix nature.",
+                "jour": 1
+            },
+            {
+                "repas": "Dîner",
+                "titre": "Curry de lentilles corail & épinards",
+                "ingredients": [
+                    "100g lentilles corail",
+                    "1/2 oignon",
+                    "1 gousse d'ail",
+                    "100g épinards frais",
+                    "150ml lait de coco",
+                    "1 c.à.c curcuma",
+                    "1/2 c.à.c cumin",
+                    "Huile d'olive"
+                ],
+                "instructions": "Faire revenir ail/oignon. Ajouter lentilles, épices, lait de coco et cuire 15 min. Ajouter les épinards en fin de cuisson. Servir chaud.",
+                "jour": 1
+            }
+        ];
+
+        // Variables globales
+        let currentWeek = 1;
+        let currentFilter = 'all';
+        let completedMeals = JSON.parse(localStorage.getItem('veggiplan-completed') || '{}');
+        let allRecipes = [];
+
+        // Génération des 30 jours complets
+        function generateAllRecipes() {
+            const baseRecipes = recettesData;
+            allRecipes = [];
+            
+            for (let day = 1; day <= 30; day++) {
+                baseRecipes.forEach(recipe => {
+                    allRecipes.push({
+                        ...recipe,
+                        jour: day,
+                        id: `day-${day}-${recipe.repas}`,
+                        titre: day === 1 ? recipe.titre : `${recipe.titre} (Jour ${day})`
+                    });
+                });
+            }
+        }
+
+        // Bienfaits anti-inflammatoires
+        const benefitsMap = {
+            'curcuma': 'Curcumine: puissant anti-inflammatoire naturel',
+            'épinards': 'Nitrates et antioxydants qui réduisent l\'inflammation',
+            'quinoa': 'Protéines complètes et magnésium anti-inflammatoire',
+            'lentilles': 'Fibres et protéines végétales qui stabilisent l\'inflammation',
+            'noix': 'Oméga-3 ALA qui combattent l\'inflammation chronique',
+            'avoine': 'Fibres bêta-glucanes qui réduisent l\'inflammation systémique',
+            'cannelle': 'Antioxydants cinnamaldéhyde aux propriétés anti-inflammatoires'
+        };
+
+        // Emojis pour les repas
+        const mealEmojis = {
+            'Petit-déjeuner': '🌅',
+            'Déjeuner': '☀️',
+            'Dîner': '🌙',
+            'Collation': '🥜'
+        };
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            generateAllRecipes();
+            setupEventListeners();
+            showWeek(1);
+            updateCompletedCount();
+            console.log('✅ VeggiPlan 30 jours chargé avec succès !');
+        });
+
+        function setupEventListeners() {
+            // Filtres par type de repas
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    displayCurrentView();
+                });
+            });
+        }
+
+        function showWeek(week) {
+            currentWeek = week;
+            
+            // Mettre à jour navigation semaines
+            document.querySelectorAll('.week-btn').forEach(btn => btn.classList.remove('active'));
+            event?.target?.classList.add('active');
+            
+            // Générer navigation jours
+            generateDayNavigation(week);
+            
+            // Mettre à jour titre
+            const startDay = (week - 1) * 7 + 1;
+            const endDay = week === 5 ? 30 : Math.min(startDay + 6, 30);
+            document.getElementById('day-title').textContent = `Semaine ${week} - Jours ${startDay} à ${endDay}`;
+            document.getElementById('day-description').textContent = getWeekDescription(week);
+            
+            // Afficher les repas de la semaine
+            displayWeekMeals(startDay, endDay);
+            updateProgressBar();
+        }
+
+        function generateDayNavigation(week) {
+            const dayNav = document.getElementById('day-nav');
+            const startDay = (week - 1) * 7 + 1;
+            const endDay = week === 5 ? 30 : Math.min(startDay + 6, 30);
+            
+            dayNav.innerHTML = '';
+            for (let day = startDay; day <= endDay; day++) {
+                const btn = document.createElement('button');
+                btn.className = 'day-btn';
+                btn.textContent = `J${day}`;
+                btn.onclick = () => showDay(day);
+                dayNav.appendChild(btn);
+            }
+        }
+
+        function showDay(day) {
+            // Mettre à jour navigation
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+            event?.target?.classList.add('active');
+            
+            // Mettre à jour titre
+            document.getElementById('day-title').textContent = `Jour ${day} - Votre menu personnalisé`;
+            document.getElementById('day-description').textContent = `4 repas équilibrés et anti-inflammatoires pour le jour ${day}`;
+            
+            // Afficher les repas du jour
+            displayDayMeals(day);
+            updateProgressBar();
+        }
+
+        function displayWeekMeals(startDay, endDay) {
+            const weekRecipes = allRecipes.filter(recipe => 
+                recipe.jour >= startDay && recipe.jour <= endDay &&
+                (currentFilter === 'all' || recipe.repas === currentFilter)
+            );
+            displayMeals(weekRecipes);
+        }
+
+        function displayDayMeals(day) {
+            const dayRecipes = allRecipes.filter(recipe => 
+                recipe.jour === day &&
+                (currentFilter === 'all' || recipe.repas === currentFilter)
+            );
+            displayMeals(dayRecipes);
+        }
+
+        function displayCurrentView() {
+            if (document.querySelector('.day-btn.active')) {
+                const activeDay = parseInt(document.querySelector('.day-btn.active').textContent.replace('J', ''));
+                displayDayMeals(activeDay);
+            } else {
+                const startDay = (currentWeek - 1) * 7 + 1;
+                const endDay = currentWeek === 5 ? 30 : Math.min(startDay + 6, 30);
+                displayWeekMeals(startDay, endDay);
+            }
+        }
+
+        function displayMeals(recipes) {
+            const container = document.getElementById('meals-container');
+            
+            if (recipes.length === 0) {
+                container.innerHTML = '<div class="no-meals">🔍 Aucun repas trouvé pour cette sélection</div>';
+                return;
+            }
+            
+            container.innerHTML = recipes.map(recipe => {
+                const isCompleted = completedMeals[recipe.id];
+                const benefits = getBenefits(recipe.ingredients);
+                
+                return `
+                    <div class="meal-card ${isCompleted ? 'completed' : ''}">
+                        <div class="anti-inflammatory">🔥 Anti-inflammatoire</div>
+                        <div class="meal-type">${mealEmojis[recipe.repas]} ${recipe.repas}</div>
+                        <div class="meal-title">${recipe.titre}</div>
+                        
+                        <div class="ingredients-section">
+                            <div class="section-title">🛒 Ingrédients</div>
+                            <ul class="ingredients-list">
+                                ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="instructions-section">
+                            <div class="section-title">👩‍🍳 Préparation</div>
+                            <div class="instructions">${recipe.instructions}</div>
+                        </div>
+                        
+                        ${benefits ? `
+                            <div class="meal-benefits">
+                                <h4>💚 Bienfaits anti-inflammatoires</h4>
+                                <p>${benefits}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <button class="action-btn" onclick="completeMeal('${recipe.id}')" ${isCompleted ? 'disabled' : ''}>
+                            ${isCompleted ? '✅ Réalisé !' : '👨‍🍳 Marquer comme fait'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getBenefits(ingredients) {
+            const benefits = [];
+            ingredients.forEach(ingredient => {
+                Object.keys(benefitsMap).forEach(key => {
+                    if (ingredient.toLowerCase().includes(key) && !benefits.find(b => b.includes(key))) {
+                        benefits.push(benefitsMap[key]);
+                    }
+                });
+            });
+            return benefits.length > 0 ? benefits.join('. ') : null;
+        }
+
+        function completeMeal(mealId) {
+            completedMeals[mealId] = true;
+            localStorage.setItem('veggiplan-completed', JSON.stringify(completedMeals));
+            
+            displayCurrentView();
+            updateCompletedCount();
+            updateProgressBar();
+            
+            showNotification('🎉 Excellent ! Repas marqué comme réalisé !');
+        }
+
+        function updateCompletedCount() {
+            const count = Object.keys(completedMeals).length;
+            document.getElementById('completed-count').textContent = count;
+        }
+
+        function updateProgressBar() {
+            const totalMeals = 120; // 4 repas × 30 jours
+            const completedCount = Object.keys(completedMeals).length;
+            const percentage = (completedCount / totalMeals) * 100;
+            document.getElementById('progress-fill').style.width = percentage + '%';
+        }
+
+        function getWeekDescription(week) {
+            const descriptions = {
+                1: 'Commencez votre transformation avec des recettes délicieuses et anti-inflammatoires',
+                2: 'Continuez sur votre lancée avec des plats variés et savoureux',
+                3: 'À mi-parcours ! Vos habitudes alimentaires évoluent positivement',
+                4: 'Dernière ligne droite avec des recettes réconfortantes',
+                5: 'Terminez en beauté ce programme de 30 jours !'
+            };
+            return descriptions[week] || 'Votre semaine de recettes végétariennes';
+        }
+
+        function showNotification(message) {
+            // Simple alert pour cette version
+            alert(message);
+        }
+    </script>
+</body>
+</html>
